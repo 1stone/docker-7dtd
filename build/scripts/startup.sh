@@ -26,6 +26,13 @@ fi
 
 if is_illy_install_required; then do_install_illy; fi
 
+if [ -n "$BACKUP_SCHEDULE" ]; then
+  echo "Installing backup cron-job"
+  add_cron "$scriptDir/backup.sh" "$BACKUP_SCHEDULE"
+else
+  remove_cron "$scriptDir/backup.sh"
+fi
+
 # Run the server
 export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${sfDir}/7DaysToDieServer_Data/Plugins/x86_64
 $sfDir/7DaysToDieServer.x86_64 ${SDTD_STARTUP_ARGUMENTS} -configfile=${sfCfg} &
