@@ -176,3 +176,17 @@ do_send_cmd() {
     fi
   fi
 }
+
+add_cron() {
+  local cmd=$1
+  local schedule=$2
+
+  remove_cron $cmd
+
+  (crontab -l || true; echo "$schedule $cmd") | crontab -
+}
+
+remove_cron() {
+  local cmd=$1
+  (crontab -l || true) | grep -v "$cmd" | crontab -
+}
