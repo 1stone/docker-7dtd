@@ -110,10 +110,9 @@ apply_admin_config() {
            -s /adminTools/admins -t elem -n newGroup \
            -i //newGroup -t attr -n steamID -v $id \
            -i //newGroup -t attr -n name -v \"${rhs[0]}\" \
-           -i //newGroup -t attr -n permission_level_default -v \"${rhs[1]}\" "
-      [ ${#rhs[@]} == 3 ] && \
-        upd+="-i //newGroup -t attr -n permission_level_mod -v \"${rhs[2]}\" "
-      upd+="-r //newGroup -v group "
+           -i //newGroup -t attr -n permission_level_default -v \"${rhs[1]}\" \
+           -i //newGroup -t attr -n permission_level_mod -v \"${rhs[2]}\" \
+           -r //newGroup -v group "
       eval xmlstarlet ed --inplace -P $upd $adminCfg
     fi
 
