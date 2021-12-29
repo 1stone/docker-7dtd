@@ -132,3 +132,47 @@ apply_admin_config() {
   # finally apply changes
   eval xmlstarlet ed --inplace -P $upd $adminCfg
 }
+
+do_send_cmd() {
+  local cmd=$1
+
+  # get telnet vars
+  eval `xmlstarlet sel -T -t -m "/ServerSettings/property[starts-with(@name,'Telnet')]" -v "concat(@name,'=',@value)" -n $sfCfg`
+
+  if [ "$TelnetEnabled" == "true" ]; then
+
+    if [ -z "${TelnetPassword}" ]||[ "${TelnetPassword}" == "NOT SET" ]; then
+      expect -c '
+        proc abort {} {
+          puts "Timeout or EOF\n"
+          exit 1
+        }
+        spawn telnet localhost '${TelnetPort}'
+        expect {
+          "session."  { send "'$cmd'\r" }
+          default     abort
+        }
+        send "exit\r"
+        expect { eof }
+      '
+    else
+      expect -c '
+        proc abort {} {
+          puts "Timeout or EOF\n"
+          exit 1
+        }
+        spawn telnet localhost '${TelnetPort}'
+        expect {
+          "password:" { send "'${TelnetPassword}'\r" }
+          default     abort
+        }
+        expect {
+          "session."  { send "'$cmd'\r" }
+          default     abort
+        }
+        send "exit\r"
+        expect { eof }
+      '
+    fi
+  fi
+}
