@@ -4,6 +4,23 @@ set -e
 
 [[ -n "$DEBUG" ]] && set -x
 
+exit_handler()
+{
+    echo "Shutdown signal received.."
+
+    # Execute the telnet shutdown commands
+    do_send_cmd "shutdown"
+
+    sleep 5
+
+    echo "Exiting.."
+    exit
+}
+
+# Trap specific signals and forward to the exit handler
+trap 'exit_handler' SIGINT SIGTERM
+
+
 cd $HOME
 
 scriptDir=$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")
