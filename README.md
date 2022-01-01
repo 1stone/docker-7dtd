@@ -179,7 +179,7 @@ docker run \
   -p 26903:26903/udp \
   -p 18080:8080/udp \
   -p 18082:8082/tcp \
-  1stone/7dtd-server
+  1stone/docker-7dtd
 ```
 
 ### with docker-compose
@@ -189,8 +189,7 @@ The same configuration from the manual docker invocation as defined through a `d
 version: '2'
 services:
   7dtdserver:
-    build: .
-    image: 1stone/7dtd-server
+    image: 1stone/docker-7dtd
     container_name: 7dtdserver
     environment:
       - PUID=4711
