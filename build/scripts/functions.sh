@@ -85,13 +85,13 @@ apply_sdtd_config() {
 
 apply_admin_config() {
 
-  # process all ADMIN_* variables
-  for var in ${!ADMIN_*}; do
-    attr=${var##ADMIN_}
+  # process all SDTD_ADMIN_* variables
+  for var in ${!SDTD_ADMIN_*}; do
+    attr=${var##SDTD_ADMIN_}
     value=${!var}
 
     if [[ $attr =~ ^USER_ ]]; then
-      id=${attr##LEVEL_USER_}
+      id=${attr##USER_}
       readarray -d: -t rhs <<< "$value:"; unset rhs[-1]
       upd="-d /adminTools/admins/user[@userid='$id'] \
            -s /adminTools/admins -t elem -n newUser \
@@ -104,7 +104,7 @@ apply_admin_config() {
     fi
 
     if [[ $attr =~ ^GROUP_ ]]; then
-      id=${attr##LEVEL_GROUP_}
+      id=${attr##GROUP_}
       readarray -d: -t rhs <<< "$value:"; unset rhs[-1]
       upd="-d /adminTools/admins/group[@steamID='$id'] \
            -s /adminTools/admins -t elem -n newGroup \
