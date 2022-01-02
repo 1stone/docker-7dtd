@@ -32,16 +32,7 @@ docker build -t 1stone/7dtd-server .
 ```
 
 
-## Usage
-General operation of the docker image is as follows:
-- Upon first run, a new docker volume is created and mounted at `/home/sdtd`.
-- If the installed versions for *7DTD* and *Alloc Mod Fixes* do not match the previous versions recorded in `/home/sdtd/.versions`, they are downloaded and installed.
-- Configuration settings provided through the docker environment are applied.
-- Optional cron-jobs (e.g. for periodic backups) are installed.
-- 7DTD server is started.
-- Any INT oder TERM signals are watched, to shutdown the server gracefully.
-
-### Container Layout
+## Container Layout
 The container is based on a minimal [Ubuntu image](https://hub.docker.com/_/ubuntu) and is kept as lean as possible.
 All required OS runtime components are downloaded and installed through APT and are provided through the container image.
 On container intitialization, all volatile data is placed below `/home/sdtd`. Than includes
@@ -52,6 +43,16 @@ On container intitialization, all volatile data is placed below `/home/sdtd`. Th
 - Backups in `/home/sdtd/backups`
 
 All of above is kept persistent throughout container restarts by using a docker volume for `/home/sdtd`.
+
+
+## Usage
+General operation of the docker image is as follows:
+- Upon first run, a new docker volume is created and mounted at `/home/sdtd`.
+- If the installed versions for *7DTD* and *Alloc Mod Fixes* do not match the previous versions recorded in `/home/sdtd/.versions`, they are downloaded and installed.
+- Configuration settings provided through the docker environment are applied.
+- Optional cron-jobs (e.g. for periodic backups) are installed.
+- 7DTD server is started.
+- Any INT oder TERM signals are watched, to shutdown the server gracefully.
 
 ### Runtime Parameters
 One design principle was to eliminate the need for pre-crafted or post-modified configuration files. Therefore most of the required configuration - if not all - can be provided through environment variables provided through the docker context.
