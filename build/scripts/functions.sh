@@ -132,6 +132,24 @@ apply_admin_config() {
   eval xmlstarlet ed --inplace -P $upd $adminCfg
 }
 
+apply_backup_config() {
+  CRONFILE=/etc/cron.d/7dtd_backup
+
+  if [ -n "$BACKUP_SCHEDULE" ]; then
+    echo "Installing backup cron-job"
+    cat <<EOF | crontab -
+BACKUP_DIR=$BACKUP_DIR
+BACKUP_COMPRESS=$BACKUP_COMPRESS
+BACKUP_MAXNUMBER=$BACKUP_MAXNUMBER
+SDTD_CFG_SaveGameFolder=$SDTD_CFG_SaveGameFolder
+
+$BACKUP_SCHEDULE $scriptDir/backup.sh
+EOF
+  else
+    [ -f $CRONFILE ] && rm $CRONFILE
+  fi
+}
+
 do_send_cmd() {
   local cmd=$1
 
@@ -174,18 +192,4 @@ do_send_cmd() {
       '
     fi
   fi
-}
-
-add_cron() {
-  local cmd=$1
-  local schedule=$2
-
-  remove_cron $cmd
-
-  (crontab -l || true; echo "$schedule $cmd") | crontab -
-}
-
-remove_cron() {
-  local cmd=$1
-  (crontab -l || true) | grep -v "$cmd" | crontab -
 }
