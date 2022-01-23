@@ -45,8 +45,8 @@ case ${BACKUP_COMPRESS:-none} in
       dfname=$(basename $latestBackup)
       (
         cd $backupDir
-        tar -czf $dfname.tar.gz $dfname
-        touch -r $dfname $dfname.tar.gz
+        tar -cjf $dfname.tar.bz2 $dfname
+        touch -r $dfname $dfname.tar.bz2
         rm -Rf $dfname
       )
     fi
