@@ -5,8 +5,21 @@ source $startupDir/env.sh
 source $startupDir/functions.sh
 
 backupDir=${BACKUP_DIR:-$HOME/backups}
+archiveDir=${ARCHIVE_DIR:-$HOME/archives}
 
 newBackup=$backupDir/`date "+%Y-%m-%d_%H-%M"`
+
+if [ "$1" == "-a" ]; then
+  archiveName=$2
+  archiveFile=${archiveDir}/${archiveName}.tar.bz2
+  if [ -z "$archiveName" ]; then
+    echo "Error: missing archive name!"
+    exit 1
+  elif [ -f "$archiveFile" ]; then
+    echo "Error: archive file already exists: " + $archiveFile
+    exit 2
+  fi
+fi
 
 # tell server to save world
 do_send_cmd "saveworld"
@@ -32,23 +45,11 @@ touch $newBackup
 ## Compress if enabled
 case ${BACKUP_COMPRESS:-none} in
   all)
-    dfname=$(basename $newBackup)
-    (
-      cd $backupDir
-      tar -cjf $dfname.tar.bz2 $dfname
-      touch -r $dfname $dfname.tar.bz2
-      rm -Rf $dfname
-    )
+    newBackupArchive=$(compress_dir $newBackup && rm -Rf $newBackup)
     ;;
   old)
     if [ -d $latestBackup ]; then
-      dfname=$(basename $latestBackup)
-      (
-        cd $backupDir
-        tar -cjf $dfname.tar.bz2 $dfname
-        touch -r $dfname $dfname.tar.bz2
-        rm -Rf $dfname
-      )
+      compress_dir $latestBackup && rm -Rf $latestBackup
     fi
     ;;
   none)
@@ -63,4 +64,14 @@ if [ -n "$BACKUP_MAXNUMBER" ]; then
     (( num++ ))
     [ $num -gt $maxBackups ] && rm -Rf $backupDir/$f
   done
+fi
+
+## Archive backup if requested
+if [ -n "$archiveFile" ]; then
+  if [ -n "$newBackupArchive" ]; then
+    ln $newBackupArchive $archiveFile
+  else
+    newBackupArchive=$(compress_dir $newBackup)
+    mv $newBackupArchive $archiveFile
+  fi
 fi

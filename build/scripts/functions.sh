@@ -193,3 +193,12 @@ do_send_cmd() {
     fi
   fi
 }
+
+compress_dir() {
+  local dir=$1
+  local archive=$dir.tar.bz2
+  tar -cj -C $dir -f $archive .
+  touch -r $dir $archive
+
+  echo "$archive"
+}
