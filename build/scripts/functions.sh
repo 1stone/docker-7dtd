@@ -35,7 +35,10 @@ do_install_sdtd() {
     +login anonymous \
     +app_update 294420 $VERSION_SDTD validate \
     +quit \
-  && echo "v_sdtd=$VERSION_SDTD" >> $versionFile
+  && (
+    echo "v_sdtd=$VERSION_SDTD" >> $versionFile
+    unset v_illy
+  )
 }
 
 do_install_illy() {
