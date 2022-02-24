@@ -27,7 +27,7 @@ is_sdtd_instance_initialized() {
 
 do_install_sdtd() {
   # cleanup
-  [ -d $sfDir ] && rm -rf $sfDir
+  #[ -d $sfDir ] && rm -rf $sfDir
 
   # install/update SDTD
   steamcmd \
