@@ -37,7 +37,7 @@ do_install_sdtd() {
     +quit \
   && (
     echo "v_sdtd=$VERSION_SDTD" >> $versionFile
-    unset v_illy
+    v_illy="reinstall"
   )
 }
 
