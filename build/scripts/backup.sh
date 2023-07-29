@@ -1,7 +1,6 @@
 #!/bin/bash
 
 startupDir=$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")
-source $startupDir/env.sh
 source $startupDir/functions.sh
 
 backupDir=${BACKUP_DIR:-$HOME/backups}

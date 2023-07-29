@@ -1,5 +1,10 @@
 #!/bin/bash
 
+versionFile=$HOME/.versions
+sfCfg=$SDTD_APP_DIR/serverconfig.xml
+saveGameDir=${SDTD_CFG_SaveGameFolder:-$HOME/.local/share/7DaysToDie/Saves}
+adminCfg=$saveGameDir/${SDTD_CFG_AdminFileName:-serveradmin.xml}
+
 [ -f $versionFile ] || touch $versionFile
 . $versionFile
 
@@ -7,14 +12,14 @@
 
 is_sdtd_install_required() {
   if [ "$v_sdtd" == "$VERSION_SDTD" \
-    -a -d $sfDir ]; then false
+    -a -d "$SDTD_APP_DIR" ]; then false
   else true
   fi
 }
 
 is_illy_install_required() {
   if [ "$v_illy" == "$VERSION_ILLY" \
-    -a -n "$VERSION_ILLY" ]; then false
+    -o -z "$VERSION_ILLY" ]; then false
   else true
   fi
 }
@@ -27,11 +32,11 @@ is_sdtd_instance_initialized() {
 
 do_install_sdtd() {
   # cleanup
-  #[ -d $sfDir ] && rm -rf $sfDir
+  #[ -d $SDTD_APP_DIR ] && rm -rf $SDTD_APP_DIR
 
   # install/update SDTD
   steamcmd \
-    +force_install_dir $sfDir \
+    +force_install_dir $SDTD_APP_DIR \
     +login anonymous \
     +app_update 294420 $VERSION_SDTD validate \
     +quit \
@@ -43,7 +48,7 @@ do_install_sdtd() {
 
 do_install_illy() {
   curl -# -SL http://illy.bz/fi/7dtd/server_fixes_$VERSION_ILLY.tar.gz | \
-  		tar -xz -C $sfDir && \
+  		tar -xz -C $SDTD_APP_DIR && \
     echo "v_illy=$VERSION_ILLY" >> $versionFile
 }
 
