@@ -41,7 +41,7 @@ do_install_sdtd() {
     +app_update 294420 $VERSION_SDTD validate \
     +quit \
   && (
-    echo "v_sdtd=$VERSION_SDTD" >> $versionFile
+    echo "v_sdtd=\"$VERSION_SDTD\"" >> $versionFile
     v_illy="reinstall"
   )
 }
@@ -49,7 +49,7 @@ do_install_sdtd() {
 do_install_illy() {
   curl -# -SL http://illy.bz/fi/7dtd/server_fixes_$VERSION_ILLY.tar.gz | \
   		tar -xz -C $SDTD_APP_DIR && \
-    echo "v_illy=$VERSION_ILLY" >> $versionFile
+    echo "v_illy=\"$VERSION_ILLY\"" >> $versionFile
 }
 
 
