@@ -66,7 +66,7 @@ USER $USER
 # SDTD Configuration
 ENV SDTD_APP_DIR=$HOME/serverfiles \
     SDTD_CFG_UserDataFolder=$HOME/userdata \
-    SDTD_CFG_SaveGameFolder=$HOME/saves \
+    SDTD_CFG_SaveGameFolder=$HOME/userdata/Saves \
     SDTD_STARTUP_ARGUMENTS="-quit -batchmode -nographics -dedicated"
 
 # Expose necessary ports
