@@ -47,11 +47,11 @@ if is_sdtd_install_required; then
 fi
 
 # Apply config
-echo "Applying 7DTD config..."
+echo "Applying 7DTD configs..."
 apply_sdtd_config
 
 if is_sdtd_instance_initialized; then
-  echo "Applying Admin config..."
+  echo "Applying Admin configs..."
   apply_admin_config
 else
   echo "WARNING: Admin-Config not applicable yet. Please restart server after first run!"
