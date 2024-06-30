@@ -101,43 +101,44 @@ apply_admin_config() {
     if [[ $attr =~ ^USER_ ]]; then
       id=${attr##USER_}
       readarray -d: -t rhs <<< "$value:"; unset rhs[-1]
-      upd="-d /adminTools/admins/user[@userid='$id'] \
-           -s /adminTools/admins -t elem -n newUser \
+      echo "applying user config: $id = $value"
+      upd="-d /adminTools/users/user[@userid='$id'] \
+           -s /adminTools/users -t elem -n newUser \
            -i //newUser -t attr -n platform -v Steam \
            -i //newUser -t attr -n userid -v $id \
            -i //newUser -t attr -n name -v \"${rhs[0]}\" \
            -i //newUser -t attr -n permission_level -v \"${rhs[1]}\" \
            -r //newUser -v user "
-      eval xmlstarlet ed --inplace -P $upd $adminCfg
     fi
 
     if [[ $attr =~ ^GROUP_ ]]; then
       id=${attr##GROUP_}
       readarray -d: -t rhs <<< "$value:"; unset rhs[-1]
-      upd="-d /adminTools/admins/group[@steamID='$id'] \
-           -s /adminTools/admins -t elem -n newGroup \
+      echo "applying group config: $id = $value"
+      upd="-d /adminTools/users/group[@steamID='$id'] \
+           -s /adminTools/users -t elem -n newGroup \
            -i //newGroup -t attr -n steamID -v $id \
            -i //newGroup -t attr -n name -v \"${rhs[0]}\" \
            -i //newGroup -t attr -n permission_level_default -v \"${rhs[1]}\" \
            -i //newGroup -t attr -n permission_level_mod -v \"${rhs[2]}\" \
            -r //newGroup -v group "
-      eval xmlstarlet ed --inplace -P $upd $adminCfg
     fi
 
     if [[ $attr =~ ^PERMISSION_ ]]; then
       cmd=${attr##PERMISSION_}
+      echo "applying permission config: $cmd = $value"
       upd="-d /adminTools/permissions/permission[@cmd='$cmd'] \
            -s /adminTools/permissions -t elem -n newPerm \
            -i //newPerm -t attr -n cmd -v $cmd \
            -i //newPerm -t attr -n permission_level -v $value \
            -r //newPerm -v permission "
-      eval xmlstarlet ed --inplace -P $upd $adminCfg
     fi
 
+    # apply change
+    if [ -n "$upd" ]; then
+      xmlstarlet edit --inplace $upd $adminCfg
+    fi
   done
-
-  # finally apply changes
-  eval xmlstarlet ed --inplace -P $upd $adminCfg
 }
 
 apply_backup_config() {
